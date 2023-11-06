@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "267625163326",
+    "project_id": "luan-van-pet-care",
+    "storage_bucket": "luan-van-pet-care.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:267625163326:android:5ad37e54999c30f4337f6f",
+        "android_client_info": {
+          "package_name": "com.example.apppetcare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "267625163326-8rgpsh33agj81hqlu8et7t60k61ob2et.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfZqDM2orswCk2HrZgImoZaStYjlsm4Xc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "267625163326-8rgpsh33agj81hqlu8et7t60k61ob2et.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:267625163326:android:a41a4bff692517ad337f6f",
+        "android_client_info": {
+          "package_name": "com.myduyen47.app_pet_care"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "267625163326-8rgpsh33agj81hqlu8et7t60k61ob2et.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfZqDM2orswCk2HrZgImoZaStYjlsm4Xc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "267625163326-8rgpsh33agj81hqlu8et7t60k61ob2et.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
