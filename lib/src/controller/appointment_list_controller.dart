@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:app_pet_care/src/model/appointment_model.dart';
 import 'package:app_pet_care/src/model/page_model.dart';
 import 'package:app_pet_care/src/service/appointment_services.dart';
@@ -23,6 +22,7 @@ class AppointmentListController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+    selectedStatus = '2';
     await init();
   }
 
@@ -136,21 +136,8 @@ class AppointmentListController extends GetxController {
         Get.back();
       });
     });
-    
   }
 
-  //lấy danh sách theo ngày 
-  Future<void> getListByDate({required String date}) async {
-    isLoading.value = true;
-    await AppointmentServices().getListByDate(date: date).then((res) async {
-      PageModel<AppointmentModel> page = await handleResponse(res);
-      isLoading.value = false;
-      isFailedLoading.value = false;
-      isLastPage.value = page.hasNextPage != true;
-      list.refresh();
-    }).catchError((error) {
-      isLoading.value = false;
-      isFailedLoading.value = true;
-    });
-  }
+
+
 }

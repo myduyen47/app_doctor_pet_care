@@ -5,6 +5,7 @@ import 'package:app_pet_care/src/widget/_common/form_cancel.dart';
 import 'package:app_pet_care/src/widget/_common/form_confirm.dart';
 import 'package:app_pet_care/src/widget/_common/form_waitconfirm.dart';
 import 'package:app_pet_care/src/widget/_common/frame_back.dart';
+import 'package:app_pet_care/src/widget/_common/no_data.dart';
 import 'package:app_pet_care/src/widget/_common/nodata.dart';
 import 'package:app_pet_care/src/widget/_common/show_dialog.dart';
 import 'package:flutter/material.dart';
@@ -104,22 +105,80 @@ class ManageAppointmentHome extends StatelessWidget {
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                FormAppointmentToDay(
-                                  services: 'Muốn dịch vụ gì cũng được',
-                                  date: '20/09/2021',
-                                  time: '15:00 PM',
-                                  location:
-                                      '123 Trần Hưng Đạo, phường Đông Xuyên, Tp Long Xuyên, tỉnh An Giang',
-                                  onPressed: () {},
-                                ),
-                                FormAppointmentToDay(
-                                  services: 'Muốn dịch vụ gì cũng được',
-                                  date: '20/09/2021',
-                                  time: '15:00 PM',
-                                  location:
-                                      '123 Trần Hưng Đạo, phường Đông Xuyên, Tp Long Xuyên, tỉnh An Giang',
-                                  onPressed: () {},
-                                ),
+                                Obx(() {
+                                  if (controller.isLoading.value) {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+
+                                  var list = controller.list;
+                                  if (list.isEmpty) {
+                                    return const nodata();
+                                  }
+
+                                  // Lọc danh sách lịch hẹn dựa trên ngày đã chọn
+                                  var filteredList = list.where((item) {
+                                    DateTime sendDate = DateTime.parse(
+                                            item.appointmentDate ?? '')
+                                        .add(const Duration(hours: 7));
+                                    return sendDate.year ==
+                                            ControllerAppointment
+                                                .selectedDate.value.year &&
+                                        sendDate.month ==
+                                            ControllerAppointment
+                                                .selectedDate.value.month &&
+                                        sendDate.day ==
+                                            ControllerAppointment
+                                                .selectedDate.value.day;
+                                  }).toList();
+
+                                  if (filteredList.isEmpty) {
+                                    return const NoData();
+                                  }
+                                  return ListView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: filteredList.length,
+                                    itemBuilder: (context, index) {
+                                      var item = filteredList[index];
+                                      DateTime sendDate = DateTime.parse(
+                                              item.appointmentDate ?? '')
+                                          .add(const Duration(hours: 7));
+                                      String date = DateFormat('dd-MM-yyyy')
+                                          .format(sendDate);
+                                      String time =
+                                          DateFormat('HH:mm').format(sendDate);
+
+                                      return FormAppointmentToDay(
+                                        services: item.service?.name ?? '',
+                                        date: date,
+                                        time: time,
+                                        location:
+                                            '123 Trần Hưng Đạo, phường Đông Xuyên, Tp Long Xuyên, tỉnh An Giang',
+                                        onPressed: () {
+                                          Get.dialog(
+                                            buildShowConfirm(
+                                              'Xác nhận lịch hẹn',
+                                              'Bạn có chắc chắn muốn xác nhận lịch hẹn này không?',
+                                              'Hoàn tác',
+                                              () {
+                                                Get.back();
+                                              },
+                                              'Xác nhận',
+                                              () {
+                                                controller.updateStatus(
+                                                    status: '3', id: item.id);
+                                                Get.back();
+                                              },
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                  );
+                                }),
                               ],
                             ),
                           ),
@@ -156,7 +215,7 @@ class ManageAppointmentHome extends StatelessWidget {
                                         petName: item.pet?.name ?? '',
                                         petAge: calculateAge(
                                             item.pet?.birthDate ?? ''),
-                                        image: 'lib/assets/image/avt.jpg',
+                                        image: 'lib/assets/image/PetPalace.png',
                                         onPressed: () {
                                           Get.dialog(
                                             buildShowConfirm(
@@ -231,7 +290,7 @@ class ManageAppointmentHome extends StatelessWidget {
                                         petName: item.pet?.name ?? '',
                                         petAge: calculateAge(
                                             item.pet?.birthDate ?? ''),
-                                        image: 'lib/assets/image/avt.jpg',
+                                        image: 'lib/assets/image/PetPalace.png',
                                         onPressed: () {},
                                       );
                                     },
@@ -273,7 +332,7 @@ class ManageAppointmentHome extends StatelessWidget {
                                         petName: item.pet?.name ?? '',
                                         petAge: calculateAge(
                                             item.pet?.birthDate ?? ''),
-                                        image: 'lib/assets/image/avt.jpg',
+                                        image: 'lib/assets/image/PetPalace.png',
                                       );
                                     },
                                   );
@@ -319,23 +378,26 @@ class ManageAppointmentHome extends StatelessWidget {
 
 void _selectedStatus(int tabIndex, AppointmentListController controller) {
   String selectedStatus = '';
-  switch (tabIndex) {
-    case 0:
-      selectedStatus = '';
-      break;
-    case 1:
-      selectedStatus = '1';
-      break;
-    case 2:
-      selectedStatus = '2';
-      break;
-    case 3:
-      selectedStatus = '4';
-      break;
-    default:
-      selectedStatus = '';
-      break;
+  if (tabIndex == 0) {
+    selectedStatus = '2';
+  } else {
+    switch (tabIndex) {
+      case 1:
+        selectedStatus = '1';
+        break;
+      case 2:
+        selectedStatus = '2';
+        break;
+      case 3:
+        selectedStatus = '4';
+        break;
+      default:
+        selectedStatus = '2';
+        break;
+    }
   }
   controller.selectedStatus = selectedStatus;
   controller.init();
 }
+
+

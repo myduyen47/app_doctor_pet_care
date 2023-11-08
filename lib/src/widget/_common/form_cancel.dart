@@ -37,38 +37,44 @@ class FormCancel extends StatelessWidget {
           children: [
             Row(
               children: [
-                CircleAvatar(
-                  radius: 30,
-                  backgroundImage: AssetImage(
-                    image,
-                  ),
-                ),
-                const SizedBox(
-                  width: 15,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
                   children: [
-                    Text(
-                      'Thú cưng: $petName',
-                      style: GoogleFonts.originalSurfer(
-                          color: Colors.white,
-                          textStyle: const TextStyle(
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Thú cưng: $petName',
+                          style: GoogleFonts.originalSurfer(
+                              color: Colors.white,
+                              textStyle: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              )),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          petAge,
+                          style: GoogleFonts.sura(
+                              textStyle: const TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 20,
+                            color: Color(0xFFFFE3D8),
+                            fontSize: 18,
                           )),
+                        ),
+                      ],
                     ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      petAge,
-                      style: GoogleFonts.sura(
-                          textStyle: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFFFFE3D8),
-                        fontSize: 18,
-                      )),
+                  ],
+                ),
+                const Spacer(),
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 33,
+                      backgroundImage: AssetImage(
+                        image,
+                      ),
                     ),
                   ],
                 ),
