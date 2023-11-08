@@ -13,7 +13,8 @@ class AccountUtil {
     Map<String, dynamic> user = {};
     user["id"] = getUserId();
     user["fullName"] = getUserName();
-    user["role"] = getUserRole();  
+    user["role"] = getUserRole();
+    user["doctorId"] = getUserDoctorId();  
     return user;
   }
 
@@ -37,6 +38,14 @@ class AccountUtil {
     final tokenData = getTokenData();
     if (tokenData != null) {
       return tokenData["role"];
+    }
+    return "";
+  }
+
+  static String getUserDoctorId() {
+    final tokenData = getTokenData();
+    if (tokenData != null) {
+      return tokenData["idDoctor"];
     }
     return "";
   }

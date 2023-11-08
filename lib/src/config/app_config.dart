@@ -27,4 +27,6 @@ class AppConfig {
   static const String apiDomain = "http://192.168.1.6:8000/api";
 
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  
+  static const bool autoLogin = true;
 }
