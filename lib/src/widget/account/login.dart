@@ -145,10 +145,12 @@ class LoginScreen extends StatelessWidget {
                           text: 'Đăng nhập',
                           backgroundColor: const Color(0xFF0072AD),
                           width: 240,
-                          onPressed: () {},
+                          onPressed: () {
+                            controller.login();
+                          },
                         ),
                         const SizedBox(height: 10),
-                        Text(
+                      Text(
                           'Hoặc',
                           style: GoogleFonts.sura(
                             textStyle: const TextStyle(

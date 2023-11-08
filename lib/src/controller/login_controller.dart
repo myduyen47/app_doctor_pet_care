@@ -1,3 +1,9 @@
+import 'dart:developer';
+
+import 'package:app_pet_care/src/service/account_services.dart';
+import 'package:app_pet_care/src/util/common_util.dart';
+import 'package:app_pet_care/src/util/token_util.dart';
+import 'package:app_pet_care/src/widget/home/home_dortor.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
@@ -8,11 +14,11 @@ class LoginDoctorController extends GetxController {
   // Form
   RxBool isFormValid = false.obs;
 
-    onDataChanged() {
+  onDataChanged() {
     isFormValid.value = usernameValid.value && passwordValid.value;
   }
 
-    // Username
+  // Username
   TextEditingController usernameController = TextEditingController();
   FocusNode usernameFocus = FocusNode();
   RxString usernameError = ''.obs;
@@ -29,7 +35,7 @@ class LoginDoctorController extends GetxController {
     onDataChanged();
   }
 
-    // Password
+  // Password
   TextEditingController passwordController = TextEditingController();
   FocusNode passwordFocus = FocusNode();
   RxString passwordError = ''.obs;
@@ -47,11 +53,11 @@ class LoginDoctorController extends GetxController {
     onDataChanged();
   }
 
-    togglePasswordHidden() {
+  togglePasswordHidden() {
     isPasswordHidden.value = !isPasswordHidden.value;
   }
 
-    @override
+  @override
   void onInit() {
     super.onInit();
     usernameController.addListener(onUsernameChanged);
@@ -65,11 +71,44 @@ class LoginDoctorController extends GetxController {
     super.onClose();
   }
 
-    @override
+  @override
   void dispose() {
     usernameController.dispose();
     passwordController.dispose();
     super.dispose();
   }
-  
+
+  Future<void> login() async {
+    Get.closeAllSnackbars();
+    isSubmitting.value = true;
+
+    try {
+      Response response = await AuthService().login(
+        username: usernameController.text,
+        password: passwordController.text,
+      );
+      log(response.body.toString(),
+          name: CommonUtil.getCurrentClassAndFuncName(StackTrace.current));
+      if (response.statusCode == 200) {
+        String? accessToken = response.body['accessToken'];
+
+        if (accessToken != null) {
+          await TokenUtil.setAccessToken(accessToken);
+          log(accessToken, name: CommonUtil.getCurrentClassAndFuncName(StackTrace.current));
+          Get.snackbar('Thành công', 'Đăng nhập thành công!', backgroundColor: const Color(0xFFFF949D));
+          Get.offAll(HomeDoctor());
+          isSubmitting.value = false;
+          return;
+        }
+        
+        
+      } else {
+        Get.snackbar('Lỗi', 'Đăng nhập thất bại');
+      }
+    } catch (e) {
+      Get.snackbar('Lỗi', 'Đăng nhập thất bại');
+    } finally {
+      isSubmitting.value = false;
+    }
+  }
 }

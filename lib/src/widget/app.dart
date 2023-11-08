@@ -1,4 +1,5 @@
 // ignore_for_file: unused_import
+import 'package:app_pet_care/src/widget/account/login.dart';
 import 'package:app_pet_care/src/widget/home/home_dortor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class _PetCareAppState extends State<PetCareApp> {
   Widget build(BuildContext context) {
     return GetMaterialApp(
         debugShowCheckedModeBanner: false,
-        home: HomeDoctor(),
+        home: LoginScreen(),
         defaultTransition: AppConfig.defaultTransition,
         locale: AppConfig.locale,
         fallbackLocale: AppConfig.fallbackLocale,

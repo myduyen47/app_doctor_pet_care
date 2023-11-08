@@ -24,8 +24,7 @@ class AppConfig {
   }
 
   static const Color materialMainBlueColor = Color(0xFF0072AD);
-
+  static const String apiDomain = "http://192.168.1.6:8000/api";
 
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
 }
