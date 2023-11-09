@@ -10,7 +10,7 @@ class FrameBack extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(
-        top: 20,
+        top: 30,
         left: 20,
       ),
       child: Row(

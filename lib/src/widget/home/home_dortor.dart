@@ -3,6 +3,8 @@ import 'package:app_pet_care/src/widget/_common/frame_image.dart';
 import 'package:app_pet_care/src/widget/_common/headerform.dart';
 import 'package:app_pet_care/src/widget/account/personal_information.dart';
 import 'package:app_pet_care/src/widget/manage_appointment_schedules/manage_appointment_home.dart';
+import 'package:app_pet_care/src/widget/medical%20record/medical_record.dart';
+import 'package:app_pet_care/src/widget/statistical/statistical_home.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -247,7 +249,9 @@ class HomeDoctor extends StatelessWidget {
                   ListContainer(
                     title: 'Thống kê danh số',
                     icon: Icons.stacked_bar_chart_outlined,
-                    onTap: () {},
+                    onTap: () {
+                      Get.to(const StatisticalScreen());
+                    },
                   ),
                   ListContainer(
                     title: 'Thông báo nhắc nhở',
@@ -257,7 +261,9 @@ class HomeDoctor extends StatelessWidget {
                   ListContainer(
                     title: 'Hồ sơ bệnh án',
                     icon: Icons.calendar_month_outlined,
-                    onTap: () {},
+                    onTap: () {
+                      Get.to(const MedicalRecordScreen());
+                    },
                   ),
                 ],
               ),
