@@ -29,5 +29,5 @@ class AuthService extends GetConnect {
 
     log(jsonEncode(body), name: CommonUtil.getCurrentClassAndFuncName(StackTrace.current));
     return await post('/auth/login', body);
-  }
+  } 
 }

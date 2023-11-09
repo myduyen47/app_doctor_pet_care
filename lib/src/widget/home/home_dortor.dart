@@ -1,3 +1,4 @@
+import 'package:app_pet_care/src/util/account_util.dart';
 import 'package:app_pet_care/src/widget/_common/frame_container.dart';
 import 'package:app_pet_care/src/widget/_common/frame_image.dart';
 import 'package:app_pet_care/src/widget/_common/headerform.dart';
@@ -17,13 +18,15 @@ class HomeDoctor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final doctor = AccountUtil.getUserName();
+
     return SafeArea(
         child: Scaffold(
       body: Column(
         children: [
           HeaderScreen(
-            title: 'BS.Huỳnh Thị Mỹ Duyên',
-            avatarPath: 'lib/assets/image/avt.jpg',
+            title: 'BS.$doctor',
+            avatarPath: 'lib/assets/image/PetPalace.png',
             actionIcon1: Icons.search,
             actionIcon2: Icons.message_rounded,
             onAction1: () {},
