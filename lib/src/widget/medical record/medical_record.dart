@@ -133,18 +133,20 @@ class MedicalRecordScreen extends StatelessWidget {
                                             ),
                                             child: TextButton(
                                               onPressed: () {
-                                                Get.to(
-                                                    const DetailMedicalRecordScreen(),
-                                                    arguments: {
-                                                      'pet': pet.pet,
-                                                      'user': pet.user
-                                                    })?.then((value) {
-                                                  if (value != null &&
-                                                      value['isReload'] ==
-                                                          true) {
-                                                    controller.onInit();
-                                                  }
-                                                });
+                                               if (pet.pet!.id != null) {
+    Get.to(
+      const DetailMedicalRecordScreen(),
+      arguments: {'pet': pet.pet, 'user': pet.user},
+    )?.then((value) {
+      if (value != null && value['isReload'] == true) {
+        controller.onInit();
+      }
+    });
+  } else {
+    // Handle the case where pet.id is null
+    // You can show a message or handle it according to your requirements
+    print('Pet ID is null');
+  }
                                               },
                                               child: Text(
                                                 'Chi tiết',

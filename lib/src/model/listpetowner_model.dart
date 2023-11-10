@@ -73,7 +73,7 @@ class Pet {
 
  factory Pet.fromJson(Map<String, dynamic> json) {
   return Pet(
-    id: json['id'],
+    id: json['_id'],
     avatar: json['avatar'] != null ? Avatar.fromJson(json['avatar']) : null,
     name: json['name'],
     type: json['type'] != null ? Type.fromJson(json['type']) : null,
@@ -91,7 +91,7 @@ class Pet {
 
   Map<String, dynamic> toJson() {
     final  Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
+    data['_id'] = id;
     if (avatar != null) {
       data['avatar'] = avatar!.toJson();
     }
@@ -197,7 +197,7 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['id'],
+      id: json['_id'],
       fullName: json['fullName'],
       email: json['email'],
       phone: json['phone'],
@@ -209,7 +209,7 @@ class User {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
+    data['_id'] = id;
     data['fullName'] = fullName;
     data['email'] = email;
     data['phone'] = phone;
@@ -241,7 +241,7 @@ class Health {
 
   factory Health.fromJson(Map<String, dynamic> json) {
     return Health(
-      id: json['id'],
+      id: json['_id'],
       pet: json['pet'] != null ? Type.fromJson(json['pet']) : null,
       user: json['user'] != null ? UserPet.fromJson(json['user']) : null,
       type: json['type'],
@@ -253,7 +253,7 @@ class Health {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> dataHealth = <String, dynamic>{};
-    dataHealth['id'] = id;
+    dataHealth['_id'] = id;
     if (pet != null) {
       dataHealth['pet'] = pet!.toJson();
     }

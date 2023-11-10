@@ -17,7 +17,7 @@ class DetailMedicalRecordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic> arguments = Get.arguments;
-    final pet = arguments['pet'];
+    final pet = arguments['pet'] as Pet;
     final user = arguments['user'];
     final controller = Get.put(GetPetOwnerListController());
 
@@ -136,36 +136,38 @@ class DetailMedicalRecordScreen extends StatelessWidget {
                                 final List<ListPetOwnerModel> petOwnerList =
                                     snapshot.data!;
 
-                                // Print all appointments for debugging
-                                for (final element in petOwnerList) {
-                                  print(
-                                      "All Appointments: ${element.appointments}");
+                                final List<ListPetOwnerModel>
+                                    matchingPetOwners = petOwnerList.where(
+                                  (element) {
+                                    print('Pet ID: ${pet.id}');
+                                    return element.pet != null &&
+                                        element.pet!.id == pet.id &&
+                                        element.appointments != null &&
+                                        element.appointments!.isNotEmpty;
+                                  },
+                                ).toList();
+
+                                if (matchingPetOwners.isEmpty) {
+                                  return const Center(
+                                      child: Text('Pet owner not found'));
                                 }
 
                                 final List<Map<String, dynamic>>
                                     filteredAppointmentDataList = [];
 
-                                for (final element in petOwnerList) {
-                                  if (element.appointments != null &&
-                                      element.appointments!.isNotEmpty) {
-                                    for (final appointment
-                                        in element.appointments!) {
-                                      if (appointment.status == 3) {
-                                        filteredAppointmentDataList.add({
-                                          'status': appointment.status,
-                                          'service': appointment.service,
-                                          'appointmentDate':
-                                              appointment.appointmentDate,
-                                        });
-                                      }
+                                for (final petOwner in matchingPetOwners) {
+                                  for (final appointment
+                                      in petOwner.appointments!) {
+                                    if (appointment.status == 3) {
+                                      filteredAppointmentDataList.add({
+                                        'status': appointment.status,
+                                        'service': appointment.service,
+                                        'appointmentDate':
+                                            appointment.appointmentDate,
+                                      });
                                     }
                                   }
                                 }
-
-                                print(
-                                    "Filtered Appointments: ${filteredAppointmentDataList.length}");
-                                print(
-                                    "Filtered Appointments Data: $filteredAppointmentDataList");
 
                                 return ListView.builder(
                                   shrinkWrap: true,
@@ -174,12 +176,14 @@ class DetailMedicalRecordScreen extends StatelessWidget {
                                   itemBuilder: (context, index) {
                                     final appointmentData =
                                         filteredAppointmentDataList[index];
-                                        DateTime sendDate = DateTime.parse(appointmentData['appointmentDate']).add(const Duration(hours: 7));
-                                         String dayOfWeek = sendDate.weekdayName;
-                                      String date =
-                                          '${dayOfWeek.toString()}, ${DateFormat('dd-MM-yyyy').format(sendDate)}';
-                                      String time =
-                                          DateFormat('HH:mm').format(sendDate); 
+                                    DateTime sendDate = DateTime.parse(
+                                            appointmentData['appointmentDate'])
+                                        .add(const Duration(hours: 7));
+                                    String dayOfWeek = sendDate.weekdayName;
+                                    String date =
+                                        '${dayOfWeek.toString()}, ${DateFormat('dd-MM-yyyy').format(sendDate)}';
+                                    String time =
+                                        DateFormat('HH:mm').format(sendDate);
                                     return FormHistory(
                                       services:
                                           appointmentData['service']?.name ??
@@ -197,209 +201,12 @@ class DetailMedicalRecordScreen extends StatelessWidget {
                               }
                             },
                           )
-
-                          // FormHistory(
-                          //   services: 'Tắm',
-                          //   onPressed: () {},
-                          //   date: '10-10-2021',
-                          //   time: '10:00',
-                          //   image: 'lib/assets/image/PetPalace.png',
-                          // ),
                         ],
                       ),
                     ),
                     SingleChildScrollView(
                       child: Column(
                         children: [
-                          Card(
-                            color: Colors.white,
-                            margin: const EdgeInsets.all(10),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              side: const BorderSide(
-                                color: Colors.grey,
-                                width: 1,
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Center(
-                                    child: Text(
-                                      'Tiêm ngừa nội kí sinh',
-                                      style: GoogleFonts.sura(
-                                        textStyle: const TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 1,
-                                    color: Colors.black,
-                                  ),
-                                  const SizedBox(height: 10),
-                                  FutureBuilder<List<ListPetOwnerModel>>(
-                                    future: controller.getPetOwnerList(),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.hasData) {
-                                        final List<ListPetOwnerModel>
-                                            petOwnerList = snapshot.data!;
-
-                                        final List<Map<String, dynamic>>
-                                            healthDataList = petOwnerList
-                                                .where((element) =>
-                                                    element.health != null &&
-                                                    element.health!.isNotEmpty)
-                                                .expand((element) =>
-                                                    element.health!)
-                                                .map((health) {
-                                          return {
-                                            'type': health.type,
-                                            'data': json.decode(health.data!),
-                                          };
-                                        }).toList();
-
-                                        final List<Map<String, dynamic>>
-                                            filteredHealthDataList =
-                                            healthDataList
-                                                .where((healthData) =>
-                                                    healthData['type'] == 3)
-                                                .toList();
-
-                                        return ListView.builder(
-                                          shrinkWrap: true,
-                                          itemCount:
-                                              filteredHealthDataList.length,
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          itemBuilder: (context, index) {
-                                            final healthData =
-                                                filteredHealthDataList[index]
-                                                    ['data'];
-                                            return Card(
-                                              color: Colors.white,
-                                              margin: const EdgeInsets.all(10),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                                side: const BorderSide(
-                                                  color: Color(0xFF12609F),
-                                                  width: 1,
-                                                ),
-                                              ),
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 10,
-                                                    bottom: 10,
-                                                    left: 15,
-                                                    right: 15),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        Row(
-                                                          children: [
-                                                            Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Row(
-                                                                  children: [
-                                                                    const Icon(
-                                                                      Icons
-                                                                          .calendar_month_outlined,
-                                                                      color: Colors
-                                                                          .black,
-                                                                      size: 28,
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      width: 8,
-                                                                    ),
-                                                                    Text(
-                                                                      healthData[
-                                                                          "Ngày tiêm"],
-                                                                      style: GoogleFonts
-                                                                          .sura(
-                                                                        color: Colors
-                                                                            .black,
-                                                                        textStyle:
-                                                                            const TextStyle(
-                                                                          fontSize:
-                                                                              20,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                const SizedBox(
-                                                                  height: 5,
-                                                                ),
-                                                                Text(
-                                                                  'Bệnh: ${healthData["Bệnh"]}',
-                                                                  style: GoogleFonts
-                                                                      .sura(
-                                                                          textStyle:
-                                                                              const TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize:
-                                                                        19,
-                                                                  )),
-                                                                ),
-                                                                Text(
-                                                                  'Thuốc: ${healthData["Thuốc"]}',
-                                                                  style: GoogleFonts
-                                                                      .sura(
-                                                                          textStyle:
-                                                                              const TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize:
-                                                                        19,
-                                                                  )),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        const Spacer(),
-                                                        const Row(
-                                                          children: [
-                                                            CircleAvatar(
-                                                              radius: 30,
-                                                              backgroundImage:
-                                                                  AssetImage(
-                                                                'lib/assets/image/PetPalace.png',
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      } else {
-                                        return const Center(
-                                            child: CircularProgressIndicator());
-                                      }
-                                    },
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
                           Card(
                             color: Colors.white,
                             margin: const EdgeInsets.all(10),
@@ -439,37 +246,53 @@ class DetailMedicalRecordScreen extends StatelessWidget {
                                         final List<ListPetOwnerModel>
                                             petOwnerList = snapshot.data!;
 
-                                        final List<Map<String, dynamic>>
-                                            healthDataList = petOwnerList
-                                                .where((element) =>
-                                                    element.health != null &&
-                                                    element.health!.isNotEmpty)
-                                                .expand((element) =>
-                                                    element.health!)
-                                                .map((health) {
-                                          return {
-                                            'type': health.type,
-                                            'data': json.decode(health.data!),
-                                          };
-                                        }).toList();
+                                        final List<ListPetOwnerModel>
+                                            matchingPetOwners =
+                                            petOwnerList.where(
+                                          (element) {
+                                            print('Pet ID: ${pet.id}');
+                                            return element.pet != null &&
+                                                element.pet!.id == pet.id &&
+                                                element.health != null &&
+                                                element.health!.isNotEmpty;
+                                          },
+                                        ).toList();
+
+                                        if (matchingPetOwners.isEmpty) {
+                                          return const Center(
+                                              child:
+                                                  Text('Pet owner not found'));
+                                        }
 
                                         final List<Map<String, dynamic>>
-                                            filteredHealthDataList =
-                                            healthDataList
-                                                .where((healthData) =>
-                                                    healthData['type'] == 1)
-                                                .toList();
+                                            filteredHealthDataList = [];
 
-                                        return ListView.builder(
-                                          shrinkWrap: true,
-                                          itemCount:
-                                              filteredHealthDataList.length,
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          itemBuilder: (context, index) {
-                                            final healthData =
-                                                filteredHealthDataList[index]
-                                                    ['data'];
+                                        for (final petOwner
+                                            in matchingPetOwners) {
+                                          for (final healthData
+                                              in petOwner.health!) {
+                                            if (healthData.type == 1) {
+                                              filteredHealthDataList.add({
+                                                'type': healthData.type,
+                                                'data': json
+                                                    .decode(healthData.data!),
+                                              });
+                                            }
+                                          }
+                                        }
+
+                                        if (filteredHealthDataList.isEmpty) {
+                                          return const Center(
+                                              child: Text(
+                                                  'Chưa có dữ liệu sức khỏe cho thú cưng này'));
+                                        }
+
+                                        return Column(
+                                          children: filteredHealthDataList
+                                              .map((healthData) {
+                                            final Map<String, dynamic> data =
+                                                healthData['data'];
+
                                             return Card(
                                               color: Colors.white,
                                               margin: const EdgeInsets.all(10),
@@ -482,68 +305,62 @@ class DetailMedicalRecordScreen extends StatelessWidget {
                                                 ),
                                               ),
                                               child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 10,
-                                                    bottom: 10,
-                                                    left: 15,
-                                                    right: 15),
+                                                padding:
+                                                    const EdgeInsets.all(15),
                                                 child: Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Row(
                                                       children: [
-                                                        Row(
+                                                        Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
                                                           children: [
-                                                            Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
+                                                            Row(
                                                               children: [
-                                                                Row(
-                                                                  children: [
-                                                                    const Icon(
-                                                                      Icons
-                                                                          .calendar_month_outlined,
-                                                                      color: Colors
-                                                                          .black,
-                                                                      size: 28,
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      width: 8,
-                                                                    ),
-                                                                    Text(
-                                                                      healthData[
-                                                                          "Ngày tiêm"],
-                                                                      style: GoogleFonts
-                                                                          .sura(
-                                                                        color: Colors
-                                                                            .black,
-                                                                        textStyle:
-                                                                            const TextStyle(
-                                                                          fontSize:
-                                                                              20,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ],
+                                                                const Icon(
+                                                                  Icons
+                                                                      .calendar_month_outlined,
+                                                                  color: Colors
+                                                                      .black,
+                                                                  size: 28,
                                                                 ),
                                                                 const SizedBox(
-                                                                  height: 5,
+                                                                  width: 8,
                                                                 ),
                                                                 Text(
-                                                                  'Vaccine: ${healthData["vaccine"]}',
-                                                                  style: GoogleFonts
-                                                                      .sura(
-                                                                          textStyle:
-                                                                              const TextStyle(
+                                                                  data[
+                                                                      "Ngày tiêm"],
+                                                                  style:
+                                                                      GoogleFonts
+                                                                          .sura(
                                                                     color: Colors
                                                                         .black,
-                                                                    fontSize:
-                                                                        19,
-                                                                  )),
+                                                                    textStyle:
+                                                                        const TextStyle(
+                                                                      fontSize:
+                                                                          20,
+                                                                    ),
+                                                                  ),
                                                                 ),
                                                               ],
+                                                            ),
+                                                            const SizedBox(
+                                                              height: 5,
+                                                            ),
+                                                            Text(
+                                                              'Vaccine: ${data["vaccine"]}',
+                                                              style: GoogleFonts
+                                                                  .sura(
+                                                                textStyle:
+                                                                    const TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 19,
+                                                                ),
+                                                              ),
                                                             ),
                                                           ],
                                                         ),
@@ -565,14 +382,213 @@ class DetailMedicalRecordScreen extends StatelessWidget {
                                                 ),
                                               ),
                                             );
-                                          },
+                                          }).toList(),
                                         );
                                       } else {
                                         return const Center(
                                             child: CircularProgressIndicator());
                                       }
                                     },
-                                  )
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Card(
+                            color: Colors.white,
+                            margin: const EdgeInsets.all(10),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              side: const BorderSide(
+                                color: Colors.grey,
+                                width: 1,
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Center(
+                                    child: Text(
+                                      'Tiêm ngừa nội kí sinh',
+                                      style: GoogleFonts.sura(
+                                        textStyle: const TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    height: 1,
+                                    color: Colors.black,
+                                  ),
+                                  const SizedBox(height: 10),
+                                  FutureBuilder<List<ListPetOwnerModel>>(
+                                    future: controller.getPetOwnerList(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        final List<ListPetOwnerModel>
+                                            petOwnerList = snapshot.data!;
+
+                                        final List<ListPetOwnerModel>
+                                            matchingPetOwners =
+                                            petOwnerList.where(
+                                          (element) {
+                                            print('Pet ID: ${pet.id}');
+                                            return element.pet != null &&
+                                                element.pet!.id == pet.id &&
+                                                element.health != null &&
+                                                element.health!.isNotEmpty;
+                                          },
+                                        ).toList();
+
+                                        if (matchingPetOwners.isEmpty) {
+                                          return const Center(
+                                              child:
+                                                  Text('Pet owner not found'));
+                                        }
+
+                                        final List<Map<String, dynamic>>
+                                            filteredHealthDataList = [];
+
+                                        for (final petOwner
+                                            in matchingPetOwners) {
+                                          for (final healthData
+                                              in petOwner.health!) {
+                                            if (healthData.type == 3) {
+                                              filteredHealthDataList.add({
+                                                'type': healthData.type,
+                                                'data': json
+                                                    .decode(healthData.data!),
+                                              });
+                                            }
+                                          }
+                                        }
+
+                                        if (filteredHealthDataList.isEmpty) {
+                                          return const Center(
+                                              child: Text(
+                                                  'Chưa có dữ liệu sức khỏe cho thú cưng này  '));
+                                        }
+
+                                        return Column(
+                                          children: filteredHealthDataList
+                                              .map((healthData) {
+                                            final Map<String, dynamic> data =
+                                                healthData['data'];
+
+                                            return Card(
+                                              color: Colors.white,
+                                              margin: const EdgeInsets.all(10),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                side: const BorderSide(
+                                                  color: Color(0xFF12609F),
+                                                  width: 1,
+                                                ),
+                                              ),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(15),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                const Icon(
+                                                                  Icons
+                                                                      .calendar_month_outlined,
+                                                                  color: Colors
+                                                                      .black,
+                                                                  size: 28,
+                                                                ),
+                                                                const SizedBox(
+                                                                  width: 8,
+                                                                ),
+                                                                Text(
+                                                                  data[
+                                                                      "Ngày tiêm"],
+                                                                  style:
+                                                                      GoogleFonts
+                                                                          .sura(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    textStyle:
+                                                                        const TextStyle(
+                                                                      fontSize:
+                                                                          20,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            const SizedBox(
+                                                              height: 5,
+                                                            ),
+                                                            Text(
+                                                              'Bệnh: ${data["Bệnh"]}',
+                                                              style: GoogleFonts
+                                                                  .sura(
+                                                                textStyle:
+                                                                    const TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 19,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Text(
+                                                              'Thuốc: ${data["Thuốc"]}',
+                                                              style: GoogleFonts
+                                                                  .sura(
+                                                                textStyle:
+                                                                    const TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 19,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        const Spacer(),
+                                                        const Row(
+                                                          children: [
+                                                            CircleAvatar(
+                                                              radius: 30,
+                                                              backgroundImage:
+                                                                  AssetImage(
+                                                                'lib/assets/image/PetPalace.png',
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          }).toList(),
+                                        );
+                                      } else {
+                                        return const Center(
+                                            child: CircularProgressIndicator());
+                                      }
+                                    },
+                                  ),
                                 ],
                               ),
                             ),
@@ -616,37 +632,53 @@ class DetailMedicalRecordScreen extends StatelessWidget {
                                         final List<ListPetOwnerModel>
                                             petOwnerList = snapshot.data!;
 
-                                        final List<Map<String, dynamic>>
-                                            healthDataList = petOwnerList
-                                                .where((element) =>
-                                                    element.health != null &&
-                                                    element.health!.isNotEmpty)
-                                                .expand((element) =>
-                                                    element.health!)
-                                                .map((health) {
-                                          return {
-                                            'type': health.type,
-                                            'data': json.decode(health.data!),
-                                          };
-                                        }).toList();
+                                        final List<ListPetOwnerModel>
+                                            matchingPetOwners =
+                                            petOwnerList.where(
+                                          (element) {
+                                            print('Pet ID: ${pet.id}');
+                                            return element.pet != null &&
+                                                element.pet!.id == pet.id &&
+                                                element.health != null &&
+                                                element.health!.isNotEmpty;
+                                          },
+                                        ).toList();
+
+                                        if (matchingPetOwners.isEmpty) {
+                                          return const Center(
+                                              child:
+                                                  Text('Pet owner not found'));
+                                        }
 
                                         final List<Map<String, dynamic>>
-                                            filteredHealthDataList =
-                                            healthDataList
-                                                .where((healthData) =>
-                                                    healthData['type'] == 2)
-                                                .toList();
+                                            filteredHealthDataList = [];
 
-                                        return ListView.builder(
-                                          shrinkWrap: true,
-                                          itemCount:
-                                              filteredHealthDataList.length,
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          itemBuilder: (context, index) {
-                                            final healthData =
-                                                filteredHealthDataList[index]
-                                                    ['data'];
+                                        for (final petOwner
+                                            in matchingPetOwners) {
+                                          for (final healthData
+                                              in petOwner.health!) {
+                                            if (healthData.type == 2) {
+                                              filteredHealthDataList.add({
+                                                'type': healthData.type,
+                                                'data': json
+                                                    .decode(healthData.data!),
+                                              });
+                                            }
+                                          }
+                                        }
+
+                                        if (filteredHealthDataList.isEmpty) {
+                                          return const Center(
+                                              child: Text(
+                                                  'Chưa có dữ liệu sức khỏe cho thú cưng này'));
+                                        }
+
+                                        return Column(
+                                          children: filteredHealthDataList
+                                              .map((healthData) {
+                                            final Map<String, dynamic> data =
+                                                healthData['data'];
+
                                             return Card(
                                               color: Colors.white,
                                               margin: const EdgeInsets.all(10),
@@ -659,80 +691,74 @@ class DetailMedicalRecordScreen extends StatelessWidget {
                                                 ),
                                               ),
                                               child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 10,
-                                                    bottom: 10,
-                                                    left: 15,
-                                                    right: 15),
+                                                padding:
+                                                    const EdgeInsets.all(15),
                                                 child: Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Row(
                                                       children: [
-                                                        Row(
+                                                        Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
                                                           children: [
-                                                            Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
+                                                            Row(
                                                               children: [
-                                                                Row(
-                                                                  children: [
-                                                                    const Icon(
-                                                                      Icons
-                                                                          .calendar_month_outlined,
-                                                                      color: Colors
-                                                                          .black,
-                                                                      size: 28,
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      width: 8,
-                                                                    ),
-                                                                    Text(
-                                                                      healthData[
-                                                                          "Ngày tiêm"],
-                                                                      style: GoogleFonts
-                                                                          .sura(
-                                                                        color: Colors
-                                                                            .black,
-                                                                        textStyle:
-                                                                            const TextStyle(
-                                                                          fontSize:
-                                                                              20,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ],
+                                                                const Icon(
+                                                                  Icons
+                                                                      .calendar_month_outlined,
+                                                                  color: Colors
+                                                                      .black,
+                                                                  size: 28,
                                                                 ),
                                                                 const SizedBox(
-                                                                  height: 5,
+                                                                  width: 8,
                                                                 ),
                                                                 Text(
-                                                                  'Bệnh: ${healthData["Bệnh"]}',
-                                                                  style: GoogleFonts
-                                                                      .sura(
-                                                                          textStyle:
-                                                                              const TextStyle(
+                                                                  data[
+                                                                      "Ngày tiêm"],
+                                                                  style:
+                                                                      GoogleFonts
+                                                                          .sura(
                                                                     color: Colors
                                                                         .black,
-                                                                    fontSize:
-                                                                        19,
-                                                                  )),
-                                                                ),
-                                                                Text(
-                                                                  'Thuốc: ${healthData["Thuốc"]}',
-                                                                  style: GoogleFonts
-                                                                      .sura(
-                                                                          textStyle:
-                                                                              const TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize:
-                                                                        19,
-                                                                  )),
+                                                                    textStyle:
+                                                                        const TextStyle(
+                                                                      fontSize:
+                                                                          20,
+                                                                    ),
+                                                                  ),
                                                                 ),
                                                               ],
+                                                            ),
+                                                            const SizedBox(
+                                                              height: 5,
+                                                            ),
+                                                            Text(
+                                                              'Bệnh: ${data["Bệnh"]}',
+                                                              style: GoogleFonts
+                                                                  .sura(
+                                                                textStyle:
+                                                                    const TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 19,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Text(
+                                                              'Thuốc: ${data["Thuốc"]}',
+                                                              style: GoogleFonts
+                                                                  .sura(
+                                                                textStyle:
+                                                                    const TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 19,
+                                                                ),
+                                                              ),
                                                             ),
                                                           ],
                                                         ),
@@ -754,14 +780,14 @@ class DetailMedicalRecordScreen extends StatelessWidget {
                                                 ),
                                               ),
                                             );
-                                          },
+                                          }).toList(),
                                         );
                                       } else {
                                         return const Center(
-                                            child: Text('Không có dữ liệu'));
+                                            child: CircularProgressIndicator());
                                       }
                                     },
-                                  )
+                                  ),
                                 ],
                               ),
                             ),
@@ -783,7 +809,7 @@ class DetailMedicalRecordScreen extends StatelessWidget {
                                 children: [
                                   Center(
                                     child: Text(
-                                      'Điều trị và phẫu thuật',
+                                      'Điều trị và phẩu thuật',
                                       style: GoogleFonts.sura(
                                         textStyle: const TextStyle(
                                           color: Colors.black,
@@ -805,37 +831,53 @@ class DetailMedicalRecordScreen extends StatelessWidget {
                                         final List<ListPetOwnerModel>
                                             petOwnerList = snapshot.data!;
 
-                                        final List<Map<String, dynamic>>
-                                            healthDataList = petOwnerList
-                                                .where((element) =>
-                                                    element.health != null &&
-                                                    element.health!.isNotEmpty)
-                                                .expand((element) =>
-                                                    element.health!)
-                                                .map((health) {
-                                          return {
-                                            'type': health.type,
-                                            'data': json.decode(health.data!),
-                                          };
-                                        }).toList();
+                                        final List<ListPetOwnerModel>
+                                            matchingPetOwners =
+                                            petOwnerList.where(
+                                          (element) {
+                                            print('Pet ID: ${pet.id}');
+                                            return element.pet != null &&
+                                                element.pet!.id == pet.id &&
+                                                element.health != null &&
+                                                element.health!.isNotEmpty;
+                                          },
+                                        ).toList();
+
+                                        if (matchingPetOwners.isEmpty) {
+                                          return const Center(
+                                              child:
+                                                  Text('Pet owner not found'));
+                                        }
 
                                         final List<Map<String, dynamic>>
-                                            filteredHealthDataList =
-                                            healthDataList
-                                                .where((healthData) =>
-                                                    healthData['type'] == 4)
-                                                .toList();
+                                            filteredHealthDataList = [];
 
-                                        return ListView.builder(
-                                          shrinkWrap: true,
-                                          itemCount:
-                                              filteredHealthDataList.length,
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          itemBuilder: (context, index) {
-                                            final healthData =
-                                                filteredHealthDataList[index]
-                                                    ['data'];
+                                        for (final petOwner
+                                            in matchingPetOwners) {
+                                          for (final healthData
+                                              in petOwner.health!) {
+                                            if (healthData.type == 4) {
+                                              filteredHealthDataList.add({
+                                                'type': healthData.type,
+                                                'data': json
+                                                    .decode(healthData.data!),
+                                              });
+                                            }
+                                          }
+                                        }
+
+                                        if (filteredHealthDataList.isEmpty) {
+                                          return const Center(
+                                              child: Text(
+                                                  'Chưa có dữ liệu sức khỏe cho thú cưng này'));
+                                        }
+
+                                        return Column(
+                                          children: filteredHealthDataList
+                                              .map((healthData) {
+                                            final Map<String, dynamic> data =
+                                                healthData['data'];
+
                                             return Card(
                                               color: Colors.white,
                                               margin: const EdgeInsets.all(10),
@@ -848,68 +890,61 @@ class DetailMedicalRecordScreen extends StatelessWidget {
                                                 ),
                                               ),
                                               child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 10,
-                                                    bottom: 10,
-                                                    left: 15,
-                                                    right: 15),
+                                                padding:
+                                                    const EdgeInsets.all(15),
                                                 child: Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Row(
                                                       children: [
-                                                        Row(
+                                                        Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
                                                           children: [
-                                                            Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
+                                                            Row(
                                                               children: [
-                                                                Row(
-                                                                  children: [
-                                                                    const Icon(
-                                                                      Icons
-                                                                          .calendar_month_outlined,
-                                                                      color: Colors
-                                                                          .black,
-                                                                      size: 28,
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      width: 8,
-                                                                    ),
-                                                                    Text(
-                                                                      healthData[
-                                                                          "Ngày"],
-                                                                      style: GoogleFonts
-                                                                          .sura(
-                                                                        color: Colors
-                                                                            .black,
-                                                                        textStyle:
-                                                                            const TextStyle(
-                                                                          fontSize:
-                                                                              20,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ],
+                                                                const Icon(
+                                                                  Icons
+                                                                      .calendar_month_outlined,
+                                                                  color: Colors
+                                                                      .black,
+                                                                  size: 28,
                                                                 ),
                                                                 const SizedBox(
-                                                                  height: 5,
+                                                                  width: 8,
                                                                 ),
                                                                 Text(
-                                                                  'Kết luận Bs: ${healthData["Nội dung"]}',
-                                                                  style: GoogleFonts
-                                                                      .sura(
-                                                                          textStyle:
-                                                                              const TextStyle(
+                                                                  data["Ngày"],
+                                                                  style:
+                                                                      GoogleFonts
+                                                                          .sura(
                                                                     color: Colors
                                                                         .black,
-                                                                    fontSize:
-                                                                        19,
-                                                                  )),
+                                                                    textStyle:
+                                                                        const TextStyle(
+                                                                      fontSize:
+                                                                          20,
+                                                                    ),
+                                                                  ),
                                                                 ),
                                                               ],
+                                                            ),
+                                                            const SizedBox(
+                                                              height: 5,
+                                                            ),
+                                                            Text(
+                                                              'Chấn đoán BS: ${data["Nội dung"]}',
+                                                              style: GoogleFonts
+                                                                  .sura(
+                                                                textStyle:
+                                                                    const TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 19,
+                                                                ),
+                                                              ),
                                                             ),
                                                           ],
                                                         ),
@@ -931,14 +966,14 @@ class DetailMedicalRecordScreen extends StatelessWidget {
                                                 ),
                                               ),
                                             );
-                                          },
+                                          }).toList(),
                                         );
                                       } else {
                                         return const Center(
                                             child: CircularProgressIndicator());
                                       }
                                     },
-                                  )
+                                  ),
                                 ],
                               ),
                             ),
