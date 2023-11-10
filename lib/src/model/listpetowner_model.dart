@@ -1,16 +1,22 @@
 class ListPetOwnerModel {
     final Pet? pet;
     final User? user;
+    List<Health>? health;
+    List<Appointment>? appointments;
 
     ListPetOwnerModel({
         this.pet,
         this.user,
+        this.health,
+        this.appointments,
     });
 
 factory ListPetOwnerModel.fromJson(Map<String, dynamic> json) {
   return ListPetOwnerModel(
     pet: json['pet'] != null ? Pet.fromJson(json['pet']) : null,
     user: json['user'] != null ? User.fromJson(json['user']) : null,
+    health: json['health'] != null ? (json['health'] as List).map((e) => Health.fromJson(e)).toList() : null,
+    appointments: json['appointments'] != null ? (json['appointments'] as List).map((e) => Appointment.fromJson(e)).toList() : null,
   );
     }
 
@@ -21,6 +27,12 @@ factory ListPetOwnerModel.fromJson(Map<String, dynamic> json) {
         }
         if (user != null) {
             data['user'] = user!.toJson();
+        }
+        if (health != null) {
+            data['health'] = health!.map((v) => v.toJson()).toList();
+        }
+        if (appointments != null) {
+            data['appointments'] = appointments!.map((v) => v.toJson()).toList();
         }
         return data;
     
@@ -204,6 +216,101 @@ class User {
     data['address'] = address;
     data['createdDate'] = createdDate;
     data['updatedDate'] = updatedDate;
+    return data;
+  }
+}
+
+class Health {
+  String? id;
+  Type? pet;
+  UserPet? user;
+  int? type;
+  String? data;
+  String? createdDate;
+  String? updatedDate;
+
+  Health({
+    this.id,
+    this.pet,
+    this.user,
+    this.type,
+    this.data,
+    this.createdDate,
+    this.updatedDate,
+  });
+
+  factory Health.fromJson(Map<String, dynamic> json) {
+    return Health(
+      id: json['id'],
+      pet: json['pet'] != null ? Type.fromJson(json['pet']) : null,
+      user: json['user'] != null ? UserPet.fromJson(json['user']) : null,
+      type: json['type'],
+      data: json['data'],
+      createdDate: json['createdDate'],
+      updatedDate: json['updatedDate'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> dataHealth = <String, dynamic>{};
+    dataHealth['id'] = id;
+    if (pet != null) {
+      dataHealth['pet'] = pet!.toJson();
+    }
+    if (user != null) {
+      dataHealth['user'] = user!.toJson();
+    }
+    dataHealth['type'] = type;
+    dataHealth['data'] = data;
+    dataHealth['createdDate'] = createdDate;
+    dataHealth['updatedDate'] = updatedDate;
+    return dataHealth;
+  }
+}
+
+class Service {
+  String? name;
+  String? price;
+
+  Service({this.name, this.price});
+
+  factory Service.fromJson(Map<String, dynamic> json) {
+    return Service(
+      name: json['name'],
+      price: json['price'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['price'] = price;
+    return data;
+  }
+}
+
+class Appointment {
+  Service? service;
+  int? status;
+  String? appointmentDate;
+
+  Appointment({this.service, this.status, this.appointmentDate});
+
+  factory Appointment.fromJson(Map<String, dynamic> json) {
+    return Appointment(
+      service: json['service'] != null ? Service.fromJson(json['service']) : null,
+      status: json['status'],
+      appointmentDate: json['appointmentDate'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (service != null) {
+      data['service'] = service!.toJson();
+    }
+    data['status'] = status;
+    data['appointmentDate'] = appointmentDate;
     return data;
   }
 }

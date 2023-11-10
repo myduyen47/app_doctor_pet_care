@@ -146,8 +146,9 @@ class ManageAppointmentHome extends StatelessWidget {
                                       DateTime sendDate = DateTime.parse(
                                               item.appointmentDate ?? '')
                                           .add(const Duration(hours: 7));
-                                      String date = DateFormat('dd-MM-yyyy')
-                                          .format(sendDate);
+                                      String dayOfWeek = sendDate.weekdayName;
+                                      String date =
+                                          '${dayOfWeek.toString()}, ${DateFormat('dd-MM-yyyy').format(sendDate)}';
                                       String time =
                                           DateFormat('HH:mm').format(sendDate);
 
@@ -204,8 +205,9 @@ class ManageAppointmentHome extends StatelessWidget {
                                       DateTime sendDate = DateTime.parse(
                                               list.first.appointmentDate ?? '')
                                           .add(const Duration(hours: 7));
-                                      String date = DateFormat('dd-MM-yyyy')
-                                          .format(sendDate);
+                                       String dayOfWeek = sendDate.weekdayName;
+                                      String date =
+                                          '${dayOfWeek.toString()}, ${DateFormat('dd-MM-yyyy').format(sendDate)}';
                                       String time =
                                           DateFormat('HH:mm').format(sendDate);
                                       return FormWaitConfirm(
@@ -279,8 +281,9 @@ class ManageAppointmentHome extends StatelessWidget {
                                       DateTime sendDate = DateTime.parse(
                                               list.first.appointmentDate ?? '')
                                           .add(const Duration(hours: 7));
-                                      String date = DateFormat('dd-MM-yyyy')
-                                          .format(sendDate);
+                                      String dayOfWeek = sendDate.weekdayName;
+                                      String date =
+                                          '${dayOfWeek.toString()}, ${DateFormat('dd-MM-yyyy').format(sendDate)}';
                                       String time =
                                           DateFormat('HH:mm').format(sendDate);
                                       return FormConfirmed(
@@ -291,7 +294,24 @@ class ManageAppointmentHome extends StatelessWidget {
                                         petAge: calculateAge(
                                             item.pet?.birthDate ?? ''),
                                         image: 'lib/assets/image/PetPalace.png',
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          Get.dialog(
+                                            buildShowConfirm(
+                                              'Hoàn Thành lịch hẹn',
+                                              'Bạn đã thực hiện xong lịch hẹn này chưa?',
+                                              'Hủy',
+                                              () {
+                                                Get.back();
+                                              },
+                                              'Hoàn thành',
+                                              () {
+                                                controller.updateStatus(
+                                                    status: '3', id: item.id);
+                                                Get.back();
+                                              },
+                                            ),
+                                          );
+                                        },
                                       );
                                     },
                                   );
@@ -321,8 +341,9 @@ class ManageAppointmentHome extends StatelessWidget {
                                       DateTime sendDate = DateTime.parse(
                                               list.first.appointmentDate ?? '')
                                           .add(const Duration(hours: 7));
-                                      String date = DateFormat('dd-MM-yyyy')
-                                          .format(sendDate);
+                                      String dayOfWeek = sendDate.weekdayName;
+                                      String date =
+                                          '${dayOfWeek.toString()}, ${DateFormat('dd-MM-yyyy').format(sendDate)}';
                                       String time =
                                           DateFormat('HH:mm').format(sendDate);
                                       return FormCancel(
@@ -400,4 +421,25 @@ void _selectedStatus(int tabIndex, AppointmentListController controller) {
   controller.init();
 }
 
-
+extension DateTimeExtensions on DateTime {
+  String get weekdayName {
+    switch (weekday) {
+      case 1:
+        return 'Thứ hai';
+      case 2:
+        return 'Thứ ba';
+      case 3:
+        return 'Thứ tư';
+      case 4:
+        return 'Thứ năm';
+      case 5:
+        return 'Thứ sáu';
+      case 6:
+        return 'Thứ bảy';
+      case 7:
+        return 'Chủ nhật';
+      default:
+        return '';
+    }
+  }
+}
