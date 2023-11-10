@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class FormDetailPet extends StatelessWidget {
   final String age;
-  final String gender;
+  final String type;
   final String birthday;
   final String weight;
   final String color;
@@ -12,7 +12,7 @@ class FormDetailPet extends StatelessWidget {
 
   FormDetailPet({
     required this.age,
-    required this.gender,
+    required this.type,
     required this.birthday,
     required this.weight,
     required this.color,
@@ -64,8 +64,8 @@ class FormDetailPet extends StatelessWidget {
                   FrameTable(text: age),
                 ]),
                 TableRow(children: [
-                  const FrameTable(text: 'Giới tính:'),
-                  FrameTable(text: gender),
+                  const FrameTable(text: 'Giống loài:'),
+                  FrameTable(text: type),
                 ]),
                 TableRow(children: [
                   const FrameTable(text: 'Sinh nhật:'),

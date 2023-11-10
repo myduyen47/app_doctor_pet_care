@@ -138,4 +138,17 @@ class AppointmentListController extends GetxController {
     });
   }
 
+  Future<List<AppointmentModel>> getAppointmentPetOwners() async {
+    final response = await AppointmentServices().getAppointmentPetOwners();
+    if (response.statusCode == 200) {
+      final appointment = AppointmentModel.fromJson(response.body);
+      list.add(appointment);
+      list.refresh();
+      isLoading.value = false;
+      return list;
+    } else {
+      throw Exception('Failed to load data!');
+    }
+  }
+
 }

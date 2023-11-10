@@ -36,6 +36,11 @@ class AppointmentServices extends GetConnect {
     return await get('/appointments/appointments-list', query: query, headers: headers);
   }
 
+  Future<Response> getAppointmentPetOwners() {
+ final id = AccountUtil.getUserDoctorId();
+    return get('/appointments/get-petowner/$id', headers: headers);
+  }
+
   Future<Response> updateStatus({required String status, String? id}) async {
     Map<String, dynamic> body = {};
     body['status'] = status;
@@ -43,4 +48,6 @@ class AppointmentServices extends GetConnect {
         name: CommonUtil.getCurrentClassAndFuncName(StackTrace.current));
     return await put('/appointments/$id', body, headers: headers);
   }
+
+
 }

@@ -52,7 +52,7 @@ class FrameDetailPeople extends StatelessWidget {
             Table(
               columnWidths: const {
                 0: FlexColumnWidth(1),
-                1: FlexColumnWidth(2),
+                1: FlexColumnWidth(2.2),
               },
               children: [
                 TableRow(children: [

@@ -3,13 +3,19 @@ import 'package:app_pet_care/src/widget/_common/frame_back.dart';
 import 'package:app_pet_care/src/widget/_common/frame_detail_info.dart';
 import 'package:app_pet_care/src/widget/_common/frame_detail_pet.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class DetailMedicalRecordScreen extends StatelessWidget {
   const DetailMedicalRecordScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, dynamic> arguments = Get.arguments;
+    final pet = arguments['pet'];
+    final user = arguments['user'];
+
     return SafeArea(
         child: Scaffold(
       backgroundColor: const Color(0xFFD1E2F0),
@@ -20,7 +26,7 @@ class DetailMedicalRecordScreen extends StatelessWidget {
             children: [
               const FrameBack(),
               Text(
-                'Henry',
+                pet!.name!,
                 style: GoogleFonts.sura(
                   textStyle: const TextStyle(
                     color: Colors.black,
@@ -29,14 +35,16 @@ class DetailMedicalRecordScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(
+              SizedBox(
                 width: 70,
                 height: 70,
                 child: Stack(
                   children: [
                     Positioned.fill(
                       child: CircleAvatar(
-                        backgroundImage: AssetImage('lib/assets/image/avt.jpg'),
+                        backgroundImage: NetworkImage(
+                          pet.avatar!.link!,
+                        ),
                       ),
                     ),
                   ],
@@ -96,18 +104,19 @@ class DetailMedicalRecordScreen extends StatelessWidget {
                       child: Column(
                         children: [
                           FrameDetailPeople(
-                            name: 'Nguyễn Văn A',
-                            email: 'abc@gmail.com',
-                            phone: '0123456789',
-                            address: '123, Đường ABC, Quận 1, TP.HCM',
+                            name: user!.fullName!,
+                            email: user.email!,
+                            phone: user.phone ?? 'N/A',
+                            address: user.address ?? 'N/A',
                           ),
                           FormDetailPet(
-                            age: '2 tuổi',
-                            gender: 'giống cái',
-                            birthday: '20/10/2019',
-                            weight: '2kg',
-                            color: 'trắng',
-                            description: 'Henry là một chú chó rất hiền lành',
+                            age: calculateAge(pet.birthDate!),
+                            type: pet.type!.name!,
+                            birthday: DateFormat('dd-MM-yyyy')
+                                .format(DateTime.parse(pet.birthDate!)),
+                            weight: '${pet.weight!.toString()} kg',
+                            color: pet.color!,
+                            description: pet.describe ?? 'N/A',
                           ),
                         ],
                       ),
@@ -273,5 +282,31 @@ class DetailMedicalRecordScreen extends StatelessWidget {
         ),
       ),
     ));
+  }
+
+  String calculateAge(String birthDate) {
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    final DateTime now = DateTime.now();
+    final DateTime birthday = formatter.parse(birthDate);
+
+    int years = now.year - birthday.year;
+    int months = now.month - birthday.month;
+    int days = now.day - birthday.day;
+
+    if (months < 0 || (months == 0 && days < 0)) {
+      years -= 1;
+      months += 12;
+    }
+
+    final String ageYears = years > 0 ? '$years tuổi ' : '';
+    final String ageMonths = months > 0 ? '$months tháng' : '';
+
+    if (years > 0 && months > 0) {
+      return '$ageYears$ageMonths';
+    } else if (years > 0) {
+      return ageYears;
+    } else {
+      return ageMonths;
+    }
   }
 }
