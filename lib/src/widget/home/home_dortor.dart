@@ -253,7 +253,7 @@ class HomeDoctor extends StatelessWidget {
                     title: 'Thống kê danh số',
                     icon: Icons.stacked_bar_chart_outlined,
                     onTap: () {
-                      Get.to(const StatisticalScreen());
+                      Get.to( StatisticalScreen( onMonthSelected: (value) {  },));
                     },
                   ),
                   ListContainer(
