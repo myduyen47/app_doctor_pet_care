@@ -1,5 +1,6 @@
 import 'package:app_pet_care/src/controller/appointment_controller.dart';
 import 'package:app_pet_care/src/controller/appointment_list_controller.dart';
+import 'package:app_pet_care/src/widget/_common/complete_form.dart';
 import 'package:app_pet_care/src/widget/_common/form_appointment_today.dart';
 import 'package:app_pet_care/src/widget/_common/form_cancel.dart';
 import 'package:app_pet_care/src/widget/_common/form_confirm.dart';
@@ -26,7 +27,7 @@ class ManageAppointmentHome extends StatelessWidget {
         child: Scaffold(
             backgroundColor: const Color(0xFFD1E2F0),
             body: DefaultTabController(
-              length: 4,
+              length: 5,
               child: SingleChildScrollView(
                 child: Column(
                   children: [
@@ -44,6 +45,9 @@ class ManageAppointmentHome extends StatelessWidget {
                         ),
                         Tab(
                           text: 'Đã xác nhận',
+                        ),
+                        Tab(
+                          text: 'Lịch hẹn hoàn thành',
                         ),
                         Tab(
                           text: 'Đã hủy',
@@ -205,7 +209,7 @@ class ManageAppointmentHome extends StatelessWidget {
                                       DateTime sendDate = DateTime.parse(
                                               list.first.appointmentDate ?? '')
                                           .add(const Duration(hours: 7));
-                                       String dayOfWeek = sendDate.weekdayName;
+                                      String dayOfWeek = sendDate.weekdayName;
                                       String date =
                                           '${dayOfWeek.toString()}, ${DateFormat('dd-MM-yyyy').format(sendDate)}';
                                       String time =
@@ -346,6 +350,48 @@ class ManageAppointmentHome extends StatelessWidget {
                                           '${dayOfWeek.toString()}, ${DateFormat('dd-MM-yyyy').format(sendDate)}';
                                       String time =
                                           DateFormat('HH:mm').format(sendDate);
+                                      return FormComplete(
+                                        services: item.service?.name ?? '',
+                                        date: date,
+                                        time: time,
+                                        petName: item.pet?.name ?? '',
+                                        petAge: calculateAge(
+                                            item.pet?.birthDate ?? ''),
+                                        image: 'lib/assets/image/PetPalace.png',
+                                      );
+                                    },
+                                  );
+                                }),
+                              ],
+                            ),
+                          ),
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Obx(() {
+                                  if (controller.isLoading.value) {
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  }
+                                  var list = controller.list;
+                                  if (list.isEmpty) {
+                                    return const nodata();
+                                  }
+                                  return ListView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: list.length,
+                                    itemBuilder: (context, index) {
+                                      var item = list[index];
+                                      DateTime sendDate = DateTime.parse(
+                                              list.first.appointmentDate ?? '')
+                                          .add(const Duration(hours: 7));
+                                      String dayOfWeek = sendDate.weekdayName;
+                                      String date =
+                                          '${dayOfWeek.toString()}, ${DateFormat('dd-MM-yyyy').format(sendDate)}';
+                                      String time =
+                                          DateFormat('HH:mm').format(sendDate);
                                       return FormCancel(
                                         services: item.service?.name ?? '',
                                         date: date,
@@ -410,6 +456,9 @@ void _selectedStatus(int tabIndex, AppointmentListController controller) {
         selectedStatus = '2';
         break;
       case 3:
+        selectedStatus = '3';
+        break;
+      case 4:
         selectedStatus = '4';
         break;
       default:
