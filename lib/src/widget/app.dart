@@ -22,8 +22,8 @@ class _PetCareAppState extends State<PetCareApp> {
   Widget build(BuildContext context) {
     return GetMaterialApp(
         debugShowCheckedModeBanner: false,
-        home: AppConfig.autoLogin == true && !AccountUtil.isExpiredLogin() ? HomeDoctor() : LoginScreen(),
-        // home: LoginScreen(),
+        // home: AppConfig.autoLogin == true && !AccountUtil.isExpiredLogin() ? HomeDoctor() : LoginScreen(),
+        home: LoginScreen(),
         defaultTransition: AppConfig.defaultTransition,
         locale: AppConfig.locale,
         fallbackLocale: AppConfig.fallbackLocale,

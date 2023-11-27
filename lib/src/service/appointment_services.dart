@@ -46,7 +46,7 @@ class AppointmentServices extends GetConnect {
     body['status'] = status;
     log(jsonEncode(body),
         name: CommonUtil.getCurrentClassAndFuncName(StackTrace.current));
-    return await put('/appointments/$id', body, headers: headers);
+    return await put('/appointments/update-status/$id', body, headers: headers);
   }
 
 

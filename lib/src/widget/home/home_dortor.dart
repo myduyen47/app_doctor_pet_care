@@ -225,14 +225,14 @@ class HomeDoctor extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   ListContainer(
-                    title: 'Quản lý lịch khám',
+                    title: 'Quản lý lịch hẹn',
                     icon: Icons.sticky_note_2_outlined,
                     onTap: () {
                       Get.to(ManageAppointmentHome());
                     },
                   ),
                   ListContainer(
-                    title: 'Xác nhận lịch khám',
+                    title: 'Cộng đồng chăm sóc',
                     icon: Icons.calendar_month_outlined,
                     onTap: () {},
                   ),
@@ -253,11 +253,13 @@ class HomeDoctor extends StatelessWidget {
                     title: 'Thống kê danh số',
                     icon: Icons.stacked_bar_chart_outlined,
                     onTap: () {
-                      Get.to( StatisticalScreen( onMonthSelected: (value) {  },));
+                      Get.to(StatisticalScreen(
+                        onMonthSelected: (value) {},
+                      ));
                     },
                   ),
                   ListContainer(
-                    title: 'Thông báo nhắc nhở',
+                    title: 'Quản lý thú cưng',
                     icon: Icons.notifications_active_outlined,
                     onTap: () {},
                   ),

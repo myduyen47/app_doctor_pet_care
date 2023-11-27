@@ -181,7 +181,7 @@ class User {
   String? fullName;
   String? email;
   String? phone;
-  String? address;
+  Address? address;
   String? createdDate;
   String? updatedDate;
 
@@ -201,7 +201,7 @@ class User {
       fullName: json['fullName'],
       email: json['email'],
       phone: json['phone'],
-      address: json['address'],
+      address: json['address'] != null ? Address.fromJson(json['address']) : null,
       createdDate: json['createdDate'],
       updatedDate: json['updatedDate'],
     );
@@ -213,9 +213,27 @@ class User {
     data['fullName'] = fullName;
     data['email'] = email;
     data['phone'] = phone;
-    data['address'] = address;
+    if (address != null) {
+      data['address'] = address!.toJson();
+    }
     data['createdDate'] = createdDate;
     data['updatedDate'] = updatedDate;
+    return data;
+  }
+}
+
+class Address {
+  String? detail;
+
+  Address({this.detail});
+
+  Address.fromJson(Map<String, dynamic> json) {
+    detail = json['detail'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['detail'] = detail;
     return data;
   }
 }

@@ -31,7 +31,7 @@ class DetailMedicalRecordScreen extends StatelessWidget {
             children: [
               const FrameBack(),
               Text(
-                pet!.name!,
+                pet.name!,
                 style: GoogleFonts.sura(
                   textStyle: const TextStyle(
                     color: Colors.black,
@@ -112,7 +112,7 @@ class DetailMedicalRecordScreen extends StatelessWidget {
                             name: user!.fullName!,
                             email: user.email!,
                             phone: user.phone ?? 'N/A',
-                            address: user.address ?? 'N/A',
+                            address: user.address.detail! ?? 'N/A',
                           ),
                           FormDetailPet(
                             age: calculateAge(pet.birthDate!),
