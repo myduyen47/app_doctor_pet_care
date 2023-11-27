@@ -207,7 +207,7 @@ class ManageAppointmentHome extends StatelessWidget {
                                     itemBuilder: (context, index) {
                                       var item = list[index];
                                       DateTime sendDate = DateTime.parse(
-                                              list.first.appointmentDate ?? '')
+                                              item.appointmentDate ?? '')
                                           .add(const Duration(hours: 7));
                                       String dayOfWeek = sendDate.weekdayName;
                                       String date =
@@ -283,7 +283,7 @@ class ManageAppointmentHome extends StatelessWidget {
                                     itemBuilder: (context, index) {
                                       var item = list[index];
                                       DateTime sendDate = DateTime.parse(
-                                              list.first.appointmentDate ?? '')
+                                              item.appointmentDate ?? '')
                                           .add(const Duration(hours: 7));
                                       String dayOfWeek = sendDate.weekdayName;
                                       String date =
@@ -343,7 +343,7 @@ class ManageAppointmentHome extends StatelessWidget {
                                     itemBuilder: (context, index) {
                                       var item = list[index];
                                       DateTime sendDate = DateTime.parse(
-                                              list.first.appointmentDate ?? '')
+                                              item.appointmentDate ?? '')
                                           .add(const Duration(hours: 7));
                                       String dayOfWeek = sendDate.weekdayName;
                                       String date =
@@ -385,7 +385,7 @@ class ManageAppointmentHome extends StatelessWidget {
                                     itemBuilder: (context, index) {
                                       var item = list[index];
                                       DateTime sendDate = DateTime.parse(
-                                              list.first.appointmentDate ?? '')
+                                              item.appointmentDate ?? '')
                                           .add(const Duration(hours: 7));
                                       String dayOfWeek = sendDate.weekdayName;
                                       String date =
