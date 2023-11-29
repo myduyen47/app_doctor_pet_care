@@ -5,6 +5,7 @@ import 'package:app_pet_care/src/widget/_common/headerform.dart';
 import 'package:app_pet_care/src/widget/account/personal_information.dart';
 import 'package:app_pet_care/src/widget/manage_appointment_schedules/manage_appointment_home.dart';
 import 'package:app_pet_care/src/widget/medical%20record/medical_record.dart';
+import 'package:app_pet_care/src/widget/post/care_community_home.dart';
 import 'package:app_pet_care/src/widget/statistical/statistical_home.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -234,7 +235,9 @@ class HomeDoctor extends StatelessWidget {
                   ListContainer(
                     title: 'Cộng đồng chăm sóc',
                     icon: Icons.calendar_month_outlined,
-                    onTap: () {},
+                    onTap: () {
+                      Get.to(PagesSceen());
+                    },
                   ),
                   ListContainer(
                     title: 'Thông tin cá nhân',
@@ -259,7 +262,7 @@ class HomeDoctor extends StatelessWidget {
                     },
                   ),
                   ListContainer(
-                    title: 'Quản lý thú cưng',
+                    title: 'Thú cưng của bạn',
                     icon: Icons.notifications_active_outlined,
                     onTap: () {},
                   ),

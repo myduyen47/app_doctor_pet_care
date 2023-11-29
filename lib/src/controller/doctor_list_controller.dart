@@ -9,7 +9,7 @@ class DoctorListController extends GetxController {
   RxList<DoctorModel> listDoctor = <DoctorModel>[].obs;
 
   @override
-    void onInit() {
+  void onInit() {
     super.onInit();
   }
 
@@ -30,10 +30,22 @@ class DoctorListController extends GetxController {
   Future<List<DoctorModel>> InfoDoctorList() async {
     final response = await DoctorServices().getDoctorInfo();
     if (response.statusCode == 200) {
-    final doctor = DoctorModel.fromJson(response.body);
-    listDoctor.add(doctor);
-    listDoctor.refresh();
-    return listDoctor;
+      final doctor = DoctorModel.fromJson(response.body);
+      listDoctor.add(doctor);
+      listDoctor.refresh();
+      return listDoctor;
+    } else {
+      throw Exception('Failed to load data!');
+    }
+  }
+
+  Future<List<DoctorModel>> fetchUserList() async {
+    final response = await DoctorServices().getDoctorInfo();
+    if (response.statusCode == 200) {
+      final doctor = DoctorModel.fromJson(response.body);
+      listDoctor.add(doctor);
+      listDoctor.refresh();
+      return listDoctor;
     } else {
       throw Exception('Failed to load data!');
     }
