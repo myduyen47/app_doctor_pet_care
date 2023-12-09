@@ -102,7 +102,7 @@ class DetailMedicalRecordScreen extends StatelessWidget {
               ),
               const SizedBox(height: 15),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.7,
+                height: MediaQuery.of(context).size.height * 0.6,
                 child: TabBarView(
                   children: [
                     SingleChildScrollView(
@@ -167,6 +167,14 @@ class DetailMedicalRecordScreen extends StatelessWidget {
                                       });
                                     }
                                   }
+                                }
+                                if (filteredAppointmentDataList.isEmpty) {
+                                  return const Center(
+                                      child: Padding(
+                                    padding: EdgeInsets.only(top: 160),
+                                    child: Text(
+                                        'Không có lịch hẹn cho thú cưng này'),
+                                  ));
                                 }
 
                                 return ListView.builder(
@@ -368,7 +376,7 @@ class DetailMedicalRecordScreen extends StatelessWidget {
                                                         const Row(
                                                           children: [
                                                             CircleAvatar(
-                                                              radius: 30,
+                                                              radius: 25,
                                                               backgroundImage:
                                                                   AssetImage(
                                                                 'lib/assets/image/PetPalace.png',
@@ -567,7 +575,7 @@ class DetailMedicalRecordScreen extends StatelessWidget {
                                                         const Row(
                                                           children: [
                                                             CircleAvatar(
-                                                              radius: 30,
+                                                              radius: 25,
                                                               backgroundImage:
                                                                   AssetImage(
                                                                 'lib/assets/image/PetPalace.png',
@@ -766,7 +774,7 @@ class DetailMedicalRecordScreen extends StatelessWidget {
                                                         const Row(
                                                           children: [
                                                             CircleAvatar(
-                                                              radius: 30,
+                                                              radius: 25,
                                                               backgroundImage:
                                                                   AssetImage(
                                                                 'lib/assets/image/PetPalace.png',

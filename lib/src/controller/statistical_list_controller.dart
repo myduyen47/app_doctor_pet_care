@@ -64,6 +64,7 @@ class StatisticalListController extends GetxController {
     try {
       final List<StatisticalModel> result =
           await getStatisticalList(selectedMonth);
+      liststatistical.value = result;
     } catch (e) {
       print(e.toString());
     }

@@ -165,7 +165,7 @@ class _StatisticalScreenState extends State<StatisticalScreen> {
                                             ),
                                           );
                                         } else if (snapshot.hasError) {
-                                          return Text('${snapshot.error}');
+                                          return Text('Chưa có dữ liệu');
                                         }
                                         return const CircularProgressIndicator();
                                       },
@@ -210,7 +210,7 @@ class _StatisticalScreenState extends State<StatisticalScreen> {
                                       ),
                                     );
                                   } else if (snapshot.hasError) {
-                                    return Text('${snapshot.error}');
+                                    return Text('Chưa có dữ liệu');
                                   }
                                   return const CircularProgressIndicator();
                                 },
@@ -264,7 +264,7 @@ class _StatisticalScreenState extends State<StatisticalScreen> {
                             ],
                           );
                         } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
+                          return Text('Chưa có dữ liệu');
                         } else {
                           return const CircularProgressIndicator();
                         }
@@ -272,7 +272,6 @@ class _StatisticalScreenState extends State<StatisticalScreen> {
                     ),
                   ),
                   // biểu đồ thống kê trạng thái lịch hẹn
-
                   Container(
                     height: 400,
                     child: FutureBuilder<List<StatisticalModel>>(
@@ -346,7 +345,7 @@ class _StatisticalScreenState extends State<StatisticalScreen> {
                             ],
                           );
                         } else if (snapshot.hasError) {
-                          return Text('${snapshot.error}');
+                          return Text('Chưa có dữ liệu');
                         }
                         return const CircularProgressIndicator();
                       },

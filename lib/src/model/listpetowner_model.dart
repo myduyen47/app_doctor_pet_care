@@ -1,43 +1,47 @@
 class ListPetOwnerModel {
-    final Pet? pet;
-    final User? user;
-    List<Health>? health;
-    List<Appointment>? appointments;
+  final Pet? pet;
+  final User? user;
+  List<Health>? health;
+  List<Appointment>? appointments;
 
-    ListPetOwnerModel({
-        this.pet,
-        this.user,
-        this.health,
-        this.appointments,
-    });
+  ListPetOwnerModel({
+    this.pet,
+    this.user,
+    this.health,
+    this.appointments,
+  });
 
-factory ListPetOwnerModel.fromJson(Map<String, dynamic> json) {
-  return ListPetOwnerModel(
-    pet: json['pet'] != null ? Pet.fromJson(json['pet']) : null,
-    user: json['user'] != null ? User.fromJson(json['user']) : null,
-    health: json['health'] != null ? (json['health'] as List).map((e) => Health.fromJson(e)).toList() : null,
-    appointments: json['appointments'] != null ? (json['appointments'] as List).map((e) => Appointment.fromJson(e)).toList() : null,
-  );
+  factory ListPetOwnerModel.fromJson(Map<String, dynamic> json) {
+    return ListPetOwnerModel(
+      pet: json['pet'] != null ? Pet.fromJson(json['pet']) : null,
+      user: json['user'] != null ? User.fromJson(json['user']) : null,
+      health: json['health'] != null
+          ? (json['health'] as List).map((e) => Health.fromJson(e)).toList()
+          : null,
+      appointments: json['appointments'] != null
+          ? (json['appointments'] as List)
+              .map((e) => Appointment.fromJson(e))
+              .toList()
+          : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (pet != null) {
+      data['pet'] = pet!.toJson();
     }
-
-    Map<String, dynamic> toJson() {
-        final Map<String, dynamic> data = <String, dynamic>{};
-        if (pet != null) {
-            data['pet'] = pet!.toJson();
-        }
-        if (user != null) {
-            data['user'] = user!.toJson();
-        }
-        if (health != null) {
-            data['health'] = health!.map((v) => v.toJson()).toList();
-        }
-        if (appointments != null) {
-            data['appointments'] = appointments!.map((v) => v.toJson()).toList();
-        }
-        return data;
-    
-   }
-     
+    if (user != null) {
+      data['user'] = user!.toJson();
+    }
+    if (health != null) {
+      data['health'] = health!.map((v) => v.toJson()).toList();
+    }
+    if (appointments != null) {
+      data['appointments'] = appointments!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
 }
 
 class Pet {
@@ -49,7 +53,7 @@ class Pet {
   int? gender;
   UserPet? user;
   String? color;
-  int? weight;
+  double? weight;
   String? describe;
   String? medicalHistory;
   String? createdDate;
@@ -71,26 +75,26 @@ class Pet {
     this.weight,
   });
 
- factory Pet.fromJson(Map<String, dynamic> json) {
-  return Pet(
-    id: json['_id'],
-    avatar: json['avatar'] != null ? Avatar.fromJson(json['avatar']) : null,
-    name: json['name'],
-    type: json['type'] != null ? Type.fromJson(json['type']) : null,
-    birthDate: json['birthDate'],
-    color: json['color'],
-    createdDate: json['createdDate'],
-    describe: json['describe'],
-    gender: json['gender'],
-    medicalHistory: json['medicalHistory'],
-    updatedDate: json['updatedDate'],
-    user: json['user'] != null ? UserPet.fromJson(json['user']) : null,
-    weight: json['weight'],
-  );
+  factory Pet.fromJson(Map<String, dynamic> json) {
+    return Pet(
+      id: json['_id'],
+      avatar: json['avatar'] != null ? Avatar.fromJson(json['avatar']) : null,
+      name: json['name'],
+      type: json['type'] != null ? Type.fromJson(json['type']) : null,
+      birthDate: json['birthDate'],
+      color: json['color'],
+      createdDate: json['createdDate'],
+      describe: json['describe'],
+      gender: json['gender'],
+      medicalHistory: json['medicalHistory'],
+      updatedDate: json['updatedDate'],
+      user: json['user'] != null ? UserPet.fromJson(json['user']) : null,
+      weight: json['weight']?.toDouble(),
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final  Map<String, dynamic> data = <String, dynamic>{};
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['_id'] = id;
     if (avatar != null) {
       data['avatar'] = avatar!.toJson();
@@ -110,14 +114,12 @@ class Pet {
     }
     data['weight'] = weight;
     return data;
-
   }
 }
 
 class UserPet {
   String id;
   String? fullName;
-
 
   UserPet({required this.id, this.fullName});
 
@@ -201,7 +203,8 @@ class User {
       fullName: json['fullName'],
       email: json['email'],
       phone: json['phone'],
-      address: json['address'] != null ? Address.fromJson(json['address']) : null,
+      address:
+          json['address'] != null ? Address.fromJson(json['address']) : null,
       createdDate: json['createdDate'],
       updatedDate: json['updatedDate'],
     );
@@ -316,7 +319,8 @@ class Appointment {
 
   factory Appointment.fromJson(Map<String, dynamic> json) {
     return Appointment(
-      service: json['service'] != null ? Service.fromJson(json['service']) : null,
+      service:
+          json['service'] != null ? Service.fromJson(json['service']) : null,
       status: json['status'],
       appointmentDate: json['appointmentDate'],
     );

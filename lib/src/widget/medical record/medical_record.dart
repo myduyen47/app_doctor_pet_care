@@ -70,7 +70,7 @@ class MedicalRecordScreen extends StatelessWidget {
                                   top: 5,
                                   child: Container(
                                     alignment: Alignment.centerLeft,
-                                    height: 160,
+                                    height: 155,
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(20),
@@ -89,7 +89,7 @@ class MedicalRecordScreen extends StatelessWidget {
                                   ),
                                 ),
                                 Positioned(
-                                    left: 190,
+                                    left: 180,
                                     top: 16,
                                     child: Column(
                                       crossAxisAlignment:
